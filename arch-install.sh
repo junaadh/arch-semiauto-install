@@ -94,7 +94,7 @@ if [[ $continue = n ]]; then
   rm /arch-installc.sh
 fi
 
-pacman -Sy - < ./packages.txt
+pacman -Sy - < ./packages.txt --needed --noconfirm
 su $username
 cd $HOME
 mkdir {Documents,Downloads,Pictures,Music,Scripts}
@@ -104,8 +104,8 @@ mkdir -p .cache/
 cd .cache
 git clone https://aur.archlinux.org/yay
 cd yay
-makepkg -si
-yay -S google-chrome-stable polybar
+makepkg -si --noconfirm
+yay -S google-chrome-stable polybar --noconfirm
 exit
 rm /arch-installc.sh
 
