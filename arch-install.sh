@@ -100,6 +100,12 @@ cd $HOME
 mkdir {Documents,Downloads,Pictures,Music,Scripts}
 rm -rf .config
 git clone git@github.com:junaadh/.config.git
+mkdir -p .cache/
+cd .cache
+git clone https://aur.archlinux.org/yay
+cd yay
+makepkg -si
+yay -S google-chrome-stable polybar
 exit
 rm /arch-installc.sh
 
