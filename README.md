@@ -2,9 +2,9 @@
 
 *****Instruction**
 
-1.You need an internet connection on your archiso. \n
-You can check connectivity using : \n 
- ```ping -c 5 archlinux.org``` \n 
+1.You need an internet connection on your archiso.\n
+You can check connectivity using :\n 
+ ```ping -c 5 archlinux.org```\n 
 
 \n
 
