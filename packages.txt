@@ -44,7 +44,6 @@ hoogle
 htop
 iftop
 imagemagick
-iptables-nft
 iw
 kitty
 libguestfs
