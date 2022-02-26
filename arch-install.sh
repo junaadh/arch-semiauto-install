@@ -32,6 +32,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 sed '1,/^#chroot$/d' arch-install.sh > /mnt/arch-installc.sh
 chmod +x /mnt/arch-installc.sh
 cp packages.txt /mnt/packages.txt
+cp packages-e50.txt /mnt/packages-e50.txt
 arch-chroot /mnt ./arch-installc.sh
 exit
 
@@ -71,7 +72,7 @@ echo "Set password for root user"
 passwd
 
 
-pacman --noconfirm -S grub efibootmgr os-prober networkmanager
+pacman --noconfirm -S grub efibootmgr os-prober networkmanager go git
 lsblk
 echo "Enter EFI partition (eg: sdX1,sdX2): "
 read efipartition
@@ -91,14 +92,39 @@ useradd -m -G wheel -s /bin/bash $username
 echo "Now you will be prompted to enter password for $username"
 passwd $username
 EDITOR=vim visudo
+
+read "Install AUR helper (yay)? [Y/n]: " yay
+if [[ $yay = Y || y ]]; then
+  echo "Changing user to $username"
+  sudo -i -u $username bash >> EOF
+  echo "IN"
+  whoami
+  mkdir -p /home/$username/.cache
+  cd /home/$username/.cache
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si --needed --noconfirm
+  cd /
+  EOF
+  echo "OUT"
+fi  
+  
 echo "Base installation finished"
 
 read -p "Continue to restore configs from github.com/junaadh? [y/n]: " continue
 if [[ $continue = n ]]; then
   exit
-  rm /arch-installc.sh
+  rm /mnt/arch-installc.sh
+  rm /mnt/packages*
 fi
 
-pacman -Sy - < ./packages.txt --needed --noconfirm
-exit
-rm /arch-installc.sh
+read -p "Which package list? [acer/asus]: " list
+if [[ $list = acer ]]; then
+  pacman -Sy - < ./packages.txt --needed --noconfirm
+  exit
+elif [[ $list = asus ]]; then
+  pacman -Sy - < ./packages-e50.txt --needed --noconfirm
+  exit
+fi
+rm /mnt/arch-installc.sh
+rm /mnt/packages*
